@@ -1,8 +1,9 @@
 const express = require('express');
-let books = require("./booksdb.js");
+// let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios=require('axios');
 
 
 public_users.post("/register", (req,res) => {
@@ -13,6 +14,7 @@ public_users.post("/register", (req,res) => {
       return res.status(400).json({message: "User already exists"});
     }
     users[username] = password;
+    console.log(users)
     return res.status(200).json({message: "User created"});
   }
   else{
@@ -93,5 +95,28 @@ public_users.get('/review/:isbn',function (req, res) {
     }
   }
 });
+
+const getAllBooks=async ()=>{
+
+  const response=await axios.get('https://localhost:5000/')
+  // console.log(books)
+  return response.data
+}
+
+
+const bookByIsbn=async ()=>{
+  const response=await axios.get('https://localhost:5000/isbn/2')
+  return response.data
+}
+
+const bookByAuthor=async ()=>{
+  const response=await axios.get('https://localhost:5000/author/Unknown')
+  return response.data
+}
+
+const bookByTitle=async ()=>{
+  const response=await axios.get('https://localhost:5000/title/The Divine Comedy')
+  return response.data
+}
 
 module.exports.general = public_users;
